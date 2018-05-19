@@ -24,7 +24,6 @@ SKIP: {
   }
 
 my($fh, $file) = tempfile();
-$file =~ s{\\}{/}g if $^O eq 'MSWin32';
 unlink $file;
 END { unlink $file if defined $file };
 
@@ -33,6 +32,8 @@ my $throttler = Data::Throttler->new(
     interval  => 60,
     db_file   => $file,
 );
+
+END { use Data::Dumper; print Dumper($throttler), "\n" };
 
 is($throttler->try_push(), 1, "1st item in");
 is($throttler->try_push(), 1, "2nd item in");

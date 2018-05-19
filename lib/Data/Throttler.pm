@@ -45,7 +45,7 @@ sub new {
         $self->lock();
         $self->{data} = $self->{ db }->load();
 
-        $create = 0;
+        $create = 0 if $self->{data}->{chain};
 
         if($self->{data}->{chain} and
            ($self->{data}->{chain}->{max_items} != $options{max_items} or
@@ -140,7 +140,10 @@ sub try_push {
 
     $self->lock();
 
-    $self->{data} = $self->{db}->load();
+    delete $self->{data};
+    do {
+        $self->{data} = $self->{db}->load();
+    } until ( defined $self->{data} );
     my $ret = $self->{data}->{chain}->try_push(%options);
     $self->{db}->save( $self->{data} );
 
@@ -675,6 +678,7 @@ sub unlock {
 ###########################################
     my($self) = @_;
     flock $self->{fh}, LOCK_UN;
+    delete $self->{fh};
 }
 
 1;
