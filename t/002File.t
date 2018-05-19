@@ -9,8 +9,8 @@ use Test::More;
 use Data::Throttler;
 use File::Temp qw(tempfile);
 
-#use Log::Log4perl qw(:easy);
-#Log::Log4perl->easy_init($DEBUG);
+use Log::Log4perl qw(:easy);
+Log::Log4perl->easy_init($DEBUG);
 
 my $nof_tests = 12;
 
