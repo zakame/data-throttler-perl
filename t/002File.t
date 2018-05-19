@@ -24,6 +24,7 @@ SKIP: {
   }
 
 my($fh, $file) = tempfile();
+$file =~ s{\\}{/}g if $^O eq 'MSWin32';
 unlink $file;
 END { unlink $file if defined $file };
 
